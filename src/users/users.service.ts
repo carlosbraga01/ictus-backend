@@ -29,6 +29,7 @@ export class UsersService {
       name: createUserDto.name,
       email: createUserDto.email,
       passwordHash: hashedPassword,
+      phone: createUserDto.phone,
       role: createUserDto.role || Role.USER,
     });
     

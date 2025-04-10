@@ -15,6 +15,10 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
+  @ApiProperty({ description: 'User Phone' })
+  @IsString()
+  phone: string;
+
   @ApiProperty({ description: 'User role', enum: Role, required: false })
   @IsEnum(Role)
   @IsOptional()
