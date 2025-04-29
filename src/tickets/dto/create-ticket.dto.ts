@@ -29,4 +29,13 @@ export class CreateTicketDto {
   @IsEnum(TicketStatus)
   @IsOptional()
   status?: TicketStatus;
+
+  @ApiProperty({
+    example: 1,
+    description: 'Quantidade de tickets a serem criados',
+    required: false,
+    default: 1,
+  })
+  @IsOptional()
+  quantidade?: number;
 }

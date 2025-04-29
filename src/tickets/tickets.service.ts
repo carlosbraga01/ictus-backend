@@ -8,6 +8,7 @@ import { Repository } from 'typeorm';
 import { CreateTicketDto } from './dto/create-ticket.dto';
 import { UpdateTicketDto } from './dto/update-ticket.dto';
 import { Ticket, TicketStatus } from './entities/ticket.entity';
+import { Event } from '../events/entities/event.entity';
 
 @Injectable()
 export class TicketsService {
@@ -19,12 +20,37 @@ export class TicketsService {
   async create(
     createTicketDto: CreateTicketDto,
     userId: string,
-  ): Promise<Ticket> {
-    const ticket = this.ticketRepository.create({
-      ...createTicketDto,
-      userId,
+  ): Promise<Ticket[] | Ticket> {
+    const quantidade = createTicketDto.quantidade ?? 1;
+    // Busca o evento e valida capacidade
+    const event = await this.ticketRepository.manager.findOne(Event, {
+      where: {
+        id: createTicketDto.eventId,
+      },
     });
-    return this.ticketRepository.save(ticket);
+    if (!event) {
+      throw new NotFoundException('Evento não encontrado');
+    }
+    const ticketsExistentes = await this.ticketRepository.count({
+      where: {
+        eventId: createTicketDto.eventId,
+      },
+    });
+    if (ticketsExistentes + quantidade > event.capacity) {
+      throw new ForbiddenException(
+        `Não é possível criar mais tickets do que a capacidade do evento (${event.capacity})`,
+      );
+    }
+    // Cria múltiplos tickets
+    const tickets: Ticket[] = [];
+    for (let i = 0; i < quantidade; i++) {
+      const ticket = this.ticketRepository.create({
+        ...createTicketDto,
+        userId,
+      });
+      tickets.push(ticket);
+    }
+    return this.ticketRepository.save(tickets);
   }
 
   async findAll(): Promise<Ticket[]> {
