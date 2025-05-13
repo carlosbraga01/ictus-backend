@@ -19,6 +19,11 @@ export class CreateUserDto {
   @IsString()
   phone: string;
 
+  @ApiProperty({ description: 'URL da foto do usuário', required: false })
+  @IsString()
+  @IsOptional()
+  profilePhotoUrl?: string;
+
   @ApiProperty({ description: 'User role', enum: Role, required: false })
   @IsEnum(Role)
   @IsOptional()

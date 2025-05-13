@@ -22,6 +22,9 @@ export class User {
   @Column({ nullable: true })
   phone: string;
 
+  @Column({ name: 'profile_photo_url', nullable: true })
+  profilePhotoUrl?: string;
+
   @Column({
     type: 'enum',
     enum: Role,

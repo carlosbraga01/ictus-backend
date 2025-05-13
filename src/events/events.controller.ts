@@ -54,6 +54,14 @@ export class EventsController {
     return this.eventsService.findAll();
   }
 
+  @Get('slug/:slug')
+  @ApiOperation({ summary: 'Get event by slug (public)' })
+  @ApiResponse({ status: 200, description: 'Event found', type: Event })
+  @ApiResponse({ status: 404, description: 'Event not found' })
+  findBySlug(@Param('slug') slug: string): Promise<Event> {
+    return this.eventsService.findBySlug(slug);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get an event by ID' })
   @ApiResponse({

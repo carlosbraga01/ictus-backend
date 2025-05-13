@@ -14,6 +14,12 @@ export class Event {
   @Column()
   title: string;
 
+  @Column({ unique: true })
+  slug: string;
+
+  @Column({ name: 'banner_image_url', nullable: true })
+  bannerImageUrl?: string;
+
   @Column({ type: 'text', nullable: true })
   description: string;
 

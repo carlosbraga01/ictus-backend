@@ -17,11 +17,24 @@ export class EventsService {
   ) {}
 
   async create(createEventDto: CreateEventDto, userId: string): Promise<Event> {
+    // Verifica se o slug já existe
+    const existing = await this.eventRepository.findOne({ where: { slug: createEventDto.slug } });
+    if (existing) {
+      throw new Error('Slug já está em uso. Escolha outro.');
+    }
     const event = this.eventRepository.create({
       ...createEventDto,
       organizerId: userId,
     });
     return this.eventRepository.save(event);
+  }
+
+  async findBySlug(slug: string): Promise<Event> {
+    const event = await this.eventRepository.findOne({ where: { slug }, relations: ['organizer'] });
+    if (!event) {
+      throw new NotFoundException('Event not found');
+    }
+    return event;
   }
 
   async findAll(): Promise<Event[]> {

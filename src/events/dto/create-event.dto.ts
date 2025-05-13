@@ -20,10 +20,25 @@ export class CreateEventDto {
   @ApiProperty({
     example: 'Conferência de Jovens 2025',
     description: 'Title of the event that will be displayed to users',
-
   })
   @IsString()
   title: string;
+
+  @ApiProperty({
+    example: 'evento-do-ano-2025-teste',
+    description: 'Slug (URL amigável) do evento. Deve ser único e apenas com letras, números e hifens.'
+  })
+  @IsString()
+  slug: string;
+
+  @ApiProperty({
+    example: 'https://cdn.site.com/banner.jpg',
+    description: 'URL da imagem de banner do evento',
+    required: false
+  })
+  @IsString()
+  @IsOptional()
+  bannerImageUrl?: string;
 
   @ApiProperty({
     example: 'Uma conferência transformadora para jovens cristãos com louvor, pregação e comunhão',
